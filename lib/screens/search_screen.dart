@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:media_vault/models/video.dart';
 import 'package:media_vault/screens/convert_screen.dart';
 import 'package:media_vault/screens/download_screen.dart';
@@ -18,7 +19,6 @@ class _SearchScreenState extends State<SearchScreen> {
     const SearchScreenContent(),
     const ConvertScreen(),
     const DownloadScreen(),
-    const Scaffold(body: Center(child: Text('Play Screen Placeholder'))),
   ];
 
   void _onTabTapped(int index) {
@@ -48,10 +48,6 @@ class _SearchScreenState extends State<SearchScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.download),
             label: 'Download',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.play_circle_fill),
-            label: 'Play',
           ),
         ],
       ),
@@ -157,19 +153,15 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
                                     },
                                   )
                                 : const Icon(Icons.broken_image),
-                            title: Text(video.title ?? 'No title'),
+                            title: Text(video.title ?? 'No title',maxLines: 1,
+                              overflow: TextOverflow.ellipsis,),
                             subtitle:
-                                Text(video.channelName ?? 'No channel name'),
+                                Text(video.channelName ?? 'No channel name',maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ConvertScreen(),
-                                  settings: RouteSettings(
-                                    arguments: video,
-                                  ),
-                                ),
-                              );
+                              String vidUrl = "https://youtu.be/${video.id}";
+                              print('Video URL: $vidUrl');
+                              Clipboard.setData(ClipboardData(text: vidUrl ?? ''));
                             },
                           );
                         },

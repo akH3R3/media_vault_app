@@ -1,21 +1,28 @@
-<<<<<<< HEAD
 # media_vault
 
-A new Flutter project.
+This project uses OpenAI's Whisper model for audio transcription. Due to GitHub's file size restrictions, the model file is **not included** in this repository.
 
-## Getting Started
+## To Use Backend 
+1. pip install fastapi uvicorn openai-whisper python-multipart
+2. # On Ubuntu/Debian
+sudo apt install ffmpeg
 
-This project is a starting point for a Flutter application.
+# On Mac
+brew install ffmpeg
 
-A few resources to get you started if this is your first Flutter project:
+# On Windows
+Download from: https://ffmpeg.org/download.html and add to PATH
+3. uvicorn main:app --reload --host 0.0.0.0 --port 8000
+this will run the server
+if you get error : uvicorn command not found, then try 
+source venv/bin/activate
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+4. Keep the whisper_backend as the sibling of project i.e. project
+5. Replace with your actual ip of computer in the code
+6. Device and Computer must be connected to the same wifi
+7. in case firewall gives issue, netsh advfirewall set allprofiles state off
+8. pip install gTTS
+run it inside the whiper backend
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
 # MediaVault
-Media Converter
->>>>>>> b17bdfaa2d86eebb2678efab6150b183995c2ce4
+Media Converter which converts mp4 files to mp3

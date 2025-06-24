@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:media_vault/screens/splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnBoarding extends StatefulWidget {
@@ -51,7 +52,9 @@ class _OnBoardingState extends State<OnBoarding> {
                       //       duration: const Duration(microseconds: 500),
                       //       curve: Curves.easeIn);
                       // },
-                      onTap: () {
+                      onTap: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('seenOnboarding', true);
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                               return const SplashScreen();
@@ -61,7 +64,9 @@ class _OnBoardingState extends State<OnBoarding> {
                   SmoothPageIndicator(controller: _controller, count: 2),
                   onLastPage
                       ? GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool('seenOnboarding', true);
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return const SplashScreen();

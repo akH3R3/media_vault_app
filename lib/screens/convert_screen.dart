@@ -54,50 +54,6 @@ class _ConvertScreenState extends State<ConvertScreen> {
     }
   }
 
-  // Future<void> _downloadFile(String videoId) async {
-  //   setState(() {
-  //     _isDownloading = true;
-  //   });
-  //
-  //   try {
-  //     final manifest =
-  //         await _youtubeExplode.videos.streamsClient.getManifest(videoId);
-  //     final streamInfo = manifest.muxed.withHighestBitrate();
-  //     final stream = _youtubeExplode.videos.streamsClient.get(streamInfo);
-  //     // final audioStreamInfo = manifest.audioOnly.withHighestBitrate();
-  //     // final audioStream =
-  //     //     _youtubeExplode.videos.streamsClient.get(audioStreamInfo);
-  //
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final sanitizedFileName = _sanitizeFileName(_video?.title ?? 'audio');
-  //     final filePath = '${directory.path}/$sanitizedFileName.mp3';
-  //     final file = File(filePath);
-  //     final output = file.openWrite(mode: FileMode.writeOnlyAppend);
-  //
-  //     await stream.pipe(output);
-  //     await output.flush();
-  //     await output.close();
-  //
-  //     final fileExists = await file.exists();
-  //     if (fileExists) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('File downloaded to: $filePath')),
-  //       );
-  //     } else {
-  //       print('File does not exist at: $filePath');
-  //     }
-  //   } catch (e) {
-  //     print('Error downloading file: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Error downloading file: $e')),
-  //     );
-  //   } finally {
-  //     setState(() {
-  //       _isDownloading = false;
-  //     });
-  //   }
-  // }
-
   Future<bool> requestStoragePermission() async {
     if (await Permission.manageExternalStorage.isGranted ||
         await Permission.storage.isGranted) return true;
@@ -131,12 +87,16 @@ class _ConvertScreenState extends State<ConvertScreen> {
         }
 
         final dir1 = Directory('/storage/emulated/0/Download');
-        final filePath1 = '${dir1.path}/${_video?.title}.mp3';
+        String? formattedTitle = _video?.title.replaceAll(' ', '');
+        formattedTitle = formattedTitle?.replaceAll(',', '');
+        formattedTitle = formattedTitle?.replaceAll('|', '');
+        formattedTitle = formattedTitle?.replaceAll('-', '');
+        formattedTitle = formattedTitle?.replaceAll('.', '');
+        formattedTitle = formattedTitle?.replaceAll(':', '');
+        final filePath1 = '${dir1.path}/${formattedTitle}.mp3';
         final file1 = File(filePath1);
-
         await file1.writeAsBytes(response.bodyBytes);
-
-        print("✅ File saved to: $filePath");
+        print("✅ File saved to: $filePath1");
       } else {
         print("❌ Server error: ${response.statusCode}");
       }
@@ -144,12 +104,6 @@ class _ConvertScreenState extends State<ConvertScreen> {
       print("❌ Download error: $e");
     }
   }
-
-
-
-  // String _sanitizeFileName(String fileName) {
-  //   return fileName.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
-  // }
 
   String? _extractVideoId(String url) {
     final uri = Uri.parse(url);
@@ -183,7 +137,10 @@ class _ConvertScreenState extends State<ConvertScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: _fetchVideoDetails,
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                _fetchVideoDetails();
+              },
               icon: Icon(Icons.search),
               label: Text('search'),
               style: ElevatedButton.styleFrom(
